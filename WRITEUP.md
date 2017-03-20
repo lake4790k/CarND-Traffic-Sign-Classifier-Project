@@ -10,6 +10,8 @@
 [image3]: ./doc/unbalanced.png "Unbalanced classes"
 [image4]: ./doc/preproc.png "Preprocessing"
 [image5]: ./doc/random_preproc.png "Random preprocessed images"
+[image6]: ./doc/new5.png "Unseen signs"
+[image6]: ./doc/new_provs.png "Unseen probs"
 
 
 ### Data Set Summary & Exploration
@@ -141,43 +143,30 @@ My final solution followed the general avice "deeper is better". Since not only 
 
 #### 1. Choose five German traffic signs found on the web and provide them in the report. For each image, discuss what quality or qualities might be difficult to classify.
 
-Here are five German traffic signs that I found on the web:
+I picked 5 traffic signs from Google Streetview:
 
-![alt text][image4] ![alt text][image5] ![alt text][image6] 
-![alt text][image7] ![alt text][image8]
+![alt text][image6]
 
-The first image might be difficult to classify because ...
+The fourth one was rotated, but I trained on rotations as well, so hould not be a problem.
+
+The second and especially the third pictures are taken from the side and I didn't add these to the preprocessing, so might be a problem.
 
 #### 2. Discuss the model's predictions on these new traffic signs and compare the results to predicting on the test set. Identify where in your code predictions were made. At a minimum, discuss what the predictions were, the accuracy on these new predictions, and compare the accuracy to the accuracy on the test set (OPTIONAL: Discuss the results in more detail as described in the "Stand Out Suggestions" part of the rubric).
 
-The code for making predictions on my final model is located in the tenth cell of the Ipython notebook.
+Cell 20.
 
-Here are the results of the prediction:
-
-| Image			        |     Prediction	        					| 
-|:---------------------:|:---------------------------------------------:| 
-| Stop Sign      		| Stop sign   									| 
-| U-turn     			| U-turn 										|
-| Yield					| Yield											|
-| 100 km/h	      		| Bumpy Road					 				|
-| Slippery Road			| Slippery Road      							|
-
-
-The model was able to correctly guess 4 of the 5 traffic signs, which gives an accuracy of 80%. This compares favorably to the accuracy on the test set of ...
+My model got all the signs right, except for the most difficult 3rd (so 80% accuracy)
 
 #### 3. Describe how certain the model is when predicting on each of the five new images by looking at the softmax probabilities for each prediction and identify where in your code softmax probabilities were outputted. Provide the top 5 softmax probabilities for each image along with the sign type of each probability. (OPTIONAL: as described in the "Stand Out Suggestions" part of the rubric, visualizations can also be provided such as bar charts)
 
-The code for making predictions on my final model is located in the 11th cell of the Ipython notebook.
+Cell 21.
 
-For the first image, the model is relatively sure that this is a stop sign (probability of 0.6), and the image does contain a stop sign. The top five soft max probabilities were
+![alt text][image6]
 
-| Probability         	|     Prediction	        					| 
-|:---------------------:|:---------------------------------------------:| 
-| .60         			| Stop sign   									| 
-| .20     				| U-turn 										|
-| .05					| Yield											|
-| .04	      			| Bumpy Road					 				|
-| .01				    | Slippery Road      							|
+The network is quite certain about the easy 1st and 5th images. And even about the rotated 4th one as it saw plenty of generated rotations.
+
+The 2nd and 3rd images are taken from the side. The dataset was probably recorded from a forward facing camera, so these are more problematic. Still the network is right and confident about the 2nd one.
+
+The 3rd one was really difficult, the network never saw anything like that and actually all five of its guesses are wrong. This is kind of OK as long as we want to use a forward facing camera, but a warning as well that the network is not magic, it only works with cases it was trained for and fails in untrained, unexpected circumstances that are still easy for us humanss.
 
 
-For the second image ... 
