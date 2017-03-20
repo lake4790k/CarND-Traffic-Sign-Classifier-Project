@@ -1,42 +1,16 @@
 # **Traffic Sign Recognition** 
 
-## Writeup Template
-
-###You can use this file as a template for your writeup if you want to submit it as a markdown file, but feel free to use some other method and submit a pdf if you prefer.
-
----
-
-**Build a Traffic Sign Recognition Project**
-
-The goals / steps of this project are the following:
-* Load the data set (see below for links to the project data set)
-* Explore, summarize and visualize the data set
-* Design, train and test a model architecture
-* Use the model to make predictions on new images
-* Analyze the softmax probabilities of the new images
-* Summarize the results with a written report
+## Writeup
 
 
 [//]: # (Image References)
 
-[image1]: ./examples/visualization.jpg "Visualization"
-[image2]: ./examples/grayscale.jpg "Grayscaling"
-[image3]: ./examples/random_noise.jpg "Random Noise"
-[image4]: ./examples/placeholder.png "Traffic Sign 1"
-[image5]: ./examples/placeholder.png "Traffic Sign 2"
-[image6]: ./examples/placeholder.png "Traffic Sign 3"
-[image7]: ./examples/placeholder.png "Traffic Sign 4"
-[image8]: ./examples/placeholder.png "Traffic Sign 5"
+[image1]: ./doc/sec.png "Sequence of images"
+[image2]: ./doc/randoms.png "Random images"
+[image3]: ./doc/unbalanced.png "Unbalanced classes"
+[image4]: ./doc/preproc.png "Preprocessing"
+[image5]: ./doc/random_preproc.png "Random preprocessed images"
 
-## Rubric Points
-###Here I will consider the [rubric points](https://review.udacity.com/#!/rubrics/481/view) individually and describe how I addressed each point in my implementation.  
-
----
-### Writeup / README
-
-#### 1. Provide a Writeup / README that includes all the rubric points and how you addressed each one. You can submit your writeup as markdown or pdf. You can use this template as a guide for writing the report. The submission includes the project code.
-
-You're reading it! and here is a link to my [project code](https://github.com/udacity/CarND-Traffic-Sign-Classifier-Project/blob/master/Traffic_Sign_Classifier.ipynb)
 
 ### Data Set Summary & Exploration
 
@@ -44,87 +18,103 @@ You're reading it! and here is a link to my [project code](https://github.com/ud
 
 The code for this step is contained in the second code cell of the IPython notebook.  
 
-I used the pandas library to calculate summary statistics of the traffic
-signs data set:
-
-* The size of training set is ?
-* The size of test set is ?
-* The shape of a traffic sign image is ?
-* The number of unique classes/labels in the data set is ?
+* The size of training set is 34799
+* The size of test set is 12630
+* The shape of a traffic sign image is (32, 32, 3)
+* The number of unique classes/labels in the data set is 43
 
 #### 2. Include an exploratory visualization of the dataset and identify where the code is in your code file.
 
-The code for this step is contained in the third code cell of the IPython notebook.  
-
-Here is an exploratory visualization of the data set. It is a bar chart showing how the data ...
+Cells 3-7.
 
 ![alt text][image1]
+
+The images seem to be consequtive frames of videos from a moving vehicule, so there are multiple images of the same sign getting scaled up as it gets closer. Hence there will be no need to enrich the test set with scaled images. Rotations could be intersting though.
+
+![alt text][image2]
+
+The images have quite different contrast/brightness levels, probably we will need preprocessing to equalize the brightness/contrast accross all images.
+
+![alt text][image3]
+
+The test set is not balanced between the classes. I need to make sure the test set will be balanced as net would be biased to just pick the class with the most training examples.
 
 ### Design and Test a Model Architecture
 
 #### 1. Describe how, and identify where in your code, you preprocessed the image data. What tecniques were chosen and why did you choose these techniques? Consider including images showing the output of each preprocessing technique. Pre-processing refers to techniques such as converting to grayscale, normalization, etc.
 
-The code for this step is contained in the fourth code cell of the IPython notebook.
+Cell 8.
 
-As a first step, I decided to convert the images to grayscale because ...
+My preprocessing
+* balances the number of training examples for each class (training set only)
+* per image converts to greyscale (training, test, valid set) It's counterintuitive that loosing the color information improves, but the linked paper suggests so
+* per image uses skimage.equalize_hist to enhance the dark images (training, test, valid set)
+* per image applies a normally distributed rotation around 0 degrees to each image (training set only), so oversampled images are all different
 
-Here is an example of a traffic sign image before and after grayscaling.
+![alt text][image4]
 
-![alt text][image2]
+I checked the training, validation and test images that they have a uniform preprocessing, eg:
 
-As a last step, I normalized the image data because ...
+![alt text][image5]
+
 
 #### 2. Describe how, and identify where in your code, you set up training, validation and testing data. How much data was in each set? Explain what techniques were used to split the data into these sets. (OPTIONAL: As described in the "Stand Out Suggestions" part of the rubric, if you generated additional data for training, describe why you decided to generate additional data, how you generated the data, identify where in your code, and provide example images of the additional data)
 
-The code for splitting the data into training and validation sets is contained in the fifth code cell of the IPython notebook.  
+I used the supplied validation and test sets. I did not do cross validation as training the bigger nets was time consuming even on the AWS GPU instances. Also the requirement was to achieve a given accuracy on the validation set supplied, so it made no sense to modify the validation set.
 
-To cross validate my model, I randomly split the training data into a training set and validation set. I did this by ...
-
-My final training set had X number of images. My validation set and test set had Y and Z number of images.
-
-The sixth code cell of the IPython notebook contains the code for augmenting the data set. I decided to generate additional data because ... To add more data to the the data set, I used the following techniques because ... 
-
-Here is an example of an original image and an augmented image:
-
-![alt text][image3]
-
-The difference between the original data set and the augmented data set is the following ... 
-
+The training set was not balanced between the classes. To fix this during the preprocessing I made sure all classes have exactly 2000 images by oversampling the smaller classes. I also applied random rotations on the images, so it's not exactly the same image that is repeated many times.
 
 #### 3. Describe, and identify where in your code, what your final model architecture looks like including model type, layers, layer sizes, connectivity, etc.) Consider including a diagram and/or table describing the final model.
 
-The code for my final model is located in the seventh cell of the ipython notebook. 
+Cells 14-16.
 
-My final model consisted of the following layers:
+I tried two architectures. The first was an implementation of the LeCunn paper that was mentioned in the notebook with the skip connection from the 1st convolutional layer to the linear classifier based on LeNet. I also used dropout. Unfortunately I couldn't get the kind of accuracies mentioned in the paper with this architecture (only mid 97%).
+
+The second approach was a deeper model with stacking convolution layers without pooling and with dropout.
 
 | Layer         		|     Description	        					| 
 |:---------------------:|:---------------------------------------------:| 
-| Input         		| 32x32x3 RGB image   							| 
-| Convolution 3x3     	| 1x1 stride, same padding, outputs 32x32x64 	|
+| Input         		| 32x32x1 greyscale image   					| 
+| Convolution 5x5     	| 1x1 stride, valid padding, 16 features 	|
 | RELU					|												|
-| Max pooling	      	| 2x2 stride,  outputs 16x16x64 				|
-| Convolution 3x3	    | etc.      									|
-| Fully connected		| etc.        									|
-| Softmax				| etc.        									|
-|						|												|
+| DropOut				|												|
+| Convolution 5x5     	| 1x1 stride, valid padding, 16 features 	|
+| RELU					|												|
+| DropOut				|												|
+| Convolution 5x5     	| 1x1 stride, valid padding, 32 features 	|
+| RELU					|												|
+| DropOut				|												|
+| Convolution 5x5     	| 1x1 stride, valid padding, 32 features 	|
+| RELU					|												|
+| DropOut				|												|
+| Convolution 5x5     	| 1x1 stride, valid padding, 64 features 	|
+| RELU					|												|
+| DropOut				|												|
+| Convolution 5x5     	| 1x1 stride, valid padding, 64 features 	|
+| RELU					|												|
+| DropOut				|												|
+| Convolution 5x5     	| 1x1 stride, valid padding, 128 features 	|
+| RELU					|												|
+| DropOut				|												|
+| Fully connected		| 1024 neurons	    							|
+| Fully connected		| 256 neurons	        						|
+| Softmax				| 43 classes	        						|
 |						|												|
  
 
 
 #### 4. Describe how, and identify where in your code, you trained your model. The discussion can include the type of optimizer, the batch size, number of epochs and any hyperparameters such as learning rate.
 
-The code for training the model is located in the eigth cell of the ipython notebook. 
-
-To train the model, I used an ....
+Cells 17-18.
 
 #### 5. Describe the approach taken for finding a solution. Include in the discussion the results on the training, validation and test sets and where in the code these were calculated. Your approach may have been an iterative process, in which case, outline the steps you took to get to the final solution and why you chose those steps. Perhaps your solution involved an already well known implementation or architecture. In this case, discuss why you think the architecture is suitable for the current problem.
 
-The code for calculating the accuracy of the model is located in the ninth cell of the Ipython notebook.
+Cell 19.
 
 My final model results were:
-* training set accuracy of ?
-* validation set accuracy of ? 
-* test set accuracy of ?
+* training set accuracy of 99.7%
+* validation set accuracy of 99.3%
+* test set accuracy of 97.5%
 
 If an iterative approach was chosen:
 * What was the first architecture that was tried and why was it chosen?
@@ -133,11 +123,25 @@ If an iterative approach was chosen:
 * Which parameters were tuned? How were they adjusted and why?
 * What are some of the important design choices and why were they chosen? For example, why might a convolution layer work well with this problem? How might a dropout layer help with creating a successful model?
 
+LeNet was the starting point. Basic LeNet does not achieve the required minimum accuracy obviously.
+Then I added the skip connections to implement the multistage classifier from the mentioned LeCunn paper.
+
+With the multistage skip connection network I could get a passing accuracy (~97.5%), but not as high as the paper stated.
+
+When I started increasing the network size I saw that the training set accuracy was easily 100%, so the network couldn't learn any more, but the validation accuracy was much worse, so I overfitted the training set. To counter this I added L2 regularization for the network weights in the cost and also added dropout to every layer. This really helped to prevent overfitting and the validation accuracy could go up much more.
+
+Since I couldn't get a really high accuracy (>99%) with the skip connection two layer convolutional network, I tried to just go deeper with the convolutions without pooling layers and no skip connections.
+
+A ran many experiments with both models on AWS GPUs to see what network size can be trained in a reasonable time frame.
+
+I used an initial learning rate of 0.001 with exponential decay.
+
 If a well known architecture was chosen:
 * What architecture was chosen?
 * Why did you believe it would be relevant to the traffic sign application?
 * How does the final model's accuracy on the training, validation and test set provide evidence that the model is working well?
  
+My final solution follows the general avice "deeper is better". Since not only the training, but the validation and test accuracies are high as well, the network didn't just learn all the training examples, but achived a more generalized knowledge.
 
 ### Test a Model on New Images
 
