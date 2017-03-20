@@ -159,7 +159,9 @@ The second and especially the third pictures are taken from the side and I didn'
 
 Cell 20.
 
-My model got all the signs right, except for the most difficult 3rd (so 80% accuracy)
+My model got all the signs right, except for the most difficult 3rd (so 80% accuracy).
+
+I would not draw too many conclusions from this result as 5 images are really too few (80% vs 99%...), but the analysis below is still interesting.
 
 #### 3. Describe how certain the model is when predicting on each of the five new images by looking at the softmax probabilities for each prediction and identify where in your code softmax probabilities were outputted. Provide the top 5 softmax probabilities for each image along with the sign type of each probability. (OPTIONAL: as described in the "Stand Out Suggestions" part of the rubric, visualizations can also be provided such as bar charts)
 
@@ -169,8 +171,8 @@ Cell 21.
 
 The network is quite certain about the easy 1st and 5th images. And even about the rotated 4th one as it saw plenty of generated rotations.
 
-The 2nd and 3rd images are taken from the side. The dataset was surely recorded from a forward facing camera, so these are more problematic. Still the network is right and confident about the 2nd one.
+The 2nd and 3rd images are taken from the side. The dataset was surely recorded from a forward facing camera, so these are more problematic. Still the network is right and fairly confident (80%) about the 2nd one.
 
-The 3rd one was really difficult, the network never saw anything like that and actually all five of its guesses are wrong. This is kind of OK as long as we want to use a forward facing camera, but a warning as well that the network is not a magician, it only works with cases it was trained for and fails in untrained, unexpected circumstances that are still easy for us humanss.
+The 3rd one was really difficult, the network never saw anything like that and actually all five of its guesses are wrong! This is kind of OK as long as we want to use a forward facing camera, but a warning as well that the network is not a magician, it only works with cases it was trained for and fails in untrained, unexpected circumstances that are still easy for us humanss.
 
 
