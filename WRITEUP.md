@@ -11,7 +11,7 @@
 [image4]: ./doc/preproc.png "Preprocessing"
 [image5]: ./doc/random_preproc.png "Random preprocessed images"
 [image6]: ./doc/new5.png "Unseen signs"
-[image7]: ./doc/new_provs.png "Unseen probs"
+[image7]: ./doc/new_probs.png "Unseen probs"
 
 
 ### Data Set Summary & Exploration
@@ -99,7 +99,11 @@ The second approach was a deeper model with stacking convolution layers without 
 | RELU					|												|
 | DropOut				|												|
 | Fully connected		| 1024 neurons	    							|
+| RELU					|												|
+| DropOut				|												|
 | Fully connected		| 256 neurons	        						|
+| RELU					|												|
+| DropOut				|												|
 | Softmax				| 43 classes	        						|
 |						|												|
  
