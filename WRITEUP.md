@@ -11,7 +11,7 @@
 [image4]: ./doc/preproc.png "Preprocessing"
 [image5]: ./doc/random_preproc.png "Random preprocessed images"
 [image6]: ./doc/new5.png "Unseen signs"
-[image6]: ./doc/new_provs.png "Unseen probs"
+[image7]: ./doc/new_provs.png "Unseen probs"
 
 
 ### Data Set Summary & Exploration
@@ -115,7 +115,7 @@ I used a batch size of 128 which seemed to ensure an efficient workload on the A
 
 With the enriched training set 100 (or less) epochs seemed sufficient to reach the potential of the networks I experimented with.
 
-I used the AdamOptimizer, didn't try any other as there quite a few other hyperparameters to experiment with already.
+I used the AdamOptimizer, I didn't try any other as there were quite a few other hyperparameters to experiment with already.
 
 #### 5. Describe the approach taken for finding a solution. Include in the discussion the results on the training, validation and test sets and where in the code these were calculated. Your approach may have been an iterative process, in which case, outline the steps you took to get to the final solution and why you chose those steps. Perhaps your solution involved an already well known implementation or architecture. In this case, discuss why you think the architecture is suitable for the current problem.
 
@@ -135,7 +135,7 @@ When I started increasing the network size I saw that the training set accuracy 
 
 Since I couldn't get a really high accuracy (>99%) with the skip connection two layer convolutional network, I tried to just go deeper with the convolutions without pooling layers and no skip connections.
 
-A ran many experiments with both models on AWS GPUs to see what network size can be trained in a reasonable time frame.
+A ran many experiments with both models on AWS GPUs to see what network size can be trained in a reasonable time frame. I used multiple AWS instances in parallel to see what models/hyperparameters worked well.
  
 My final solution followed the general avice "deeper is better". Since not only the training, but the validation and test accuracies are high as well, I believe the network didn't just learn all the training examples, but achived a more generalized knowledge. Although the test set accuracy was only 97.5% compared with 99.3%, so could be still better.
 
@@ -147,9 +147,9 @@ I picked 5 traffic signs from Google Streetview:
 
 ![alt text][image6]
 
-The fourth one was rotated, but I trained on rotations as well, so hould not be a problem.
+The first and last should be easy. The fourth one was rotated, but I trained on rotations as well, so should still not be a problem.
 
-The second and especially the third pictures are taken from the side and I didn't add these to the preprocessing, so might be a problem.
+The second and especially the third pictures are taken from the side and I didn't add these transformations to the preprocessing, so might be a problem.
 
 #### 2. Discuss the model's predictions on these new traffic signs and compare the results to predicting on the test set. Identify where in your code predictions were made. At a minimum, discuss what the predictions were, the accuracy on these new predictions, and compare the accuracy to the accuracy on the test set (OPTIONAL: Discuss the results in more detail as described in the "Stand Out Suggestions" part of the rubric).
 
@@ -161,12 +161,12 @@ My model got all the signs right, except for the most difficult 3rd (so 80% accu
 
 Cell 21.
 
-![alt text][image6]
+![alt text][image7]
 
 The network is quite certain about the easy 1st and 5th images. And even about the rotated 4th one as it saw plenty of generated rotations.
 
-The 2nd and 3rd images are taken from the side. The dataset was probably recorded from a forward facing camera, so these are more problematic. Still the network is right and confident about the 2nd one.
+The 2nd and 3rd images are taken from the side. The dataset was surely recorded from a forward facing camera, so these are more problematic. Still the network is right and confident about the 2nd one.
 
-The 3rd one was really difficult, the network never saw anything like that and actually all five of its guesses are wrong. This is kind of OK as long as we want to use a forward facing camera, but a warning as well that the network is not magic, it only works with cases it was trained for and fails in untrained, unexpected circumstances that are still easy for us humanss.
+The 3rd one was really difficult, the network never saw anything like that and actually all five of its guesses are wrong. This is kind of OK as long as we want to use a forward facing camera, but a warning as well that the network is not a magician, it only works with cases it was trained for and fails in untrained, unexpected circumstances that are still easy for us humanss.
 
 
