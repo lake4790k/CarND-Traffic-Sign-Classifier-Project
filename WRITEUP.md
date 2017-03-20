@@ -5,7 +5,7 @@
 
 [//]: # (Image References)
 
-[image1]: ./doc/sec.png "Sequence of images"
+[image1]: ./doc/seq.png "Sequence of images"
 [image2]: ./doc/randoms.png "Random images"
 [image3]: ./doc/unbalanced.png "Unbalanced classes"
 [image4]: ./doc/preproc.png "Preprocessing"
@@ -107,6 +107,14 @@ The second approach was a deeper model with stacking convolution layers without 
 
 Cells 17-18.
 
+I used an initial learning rate of 0.001 with exponential decay.
+
+I used a batch size of 128 which seemed to ensure an efficient workload on the AWS GPU.
+
+With the enriched training set 100 (or less) epochs seemed sufficient to reach the potential of the networks I experimented with.
+
+I used the AdamOptimizer, didn't try any other as there quite a few other hyperparameters to experiment with already.
+
 #### 5. Describe the approach taken for finding a solution. Include in the discussion the results on the training, validation and test sets and where in the code these were calculated. Your approach may have been an iterative process, in which case, outline the steps you took to get to the final solution and why you chose those steps. Perhaps your solution involved an already well known implementation or architecture. In this case, discuss why you think the architecture is suitable for the current problem.
 
 Cell 19.
@@ -115,13 +123,6 @@ My final model results were:
 * training set accuracy of 99.7%
 * validation set accuracy of 99.3%
 * test set accuracy of 97.5%
-
-If an iterative approach was chosen:
-* What was the first architecture that was tried and why was it chosen?
-* What were some problems with the initial architecture?
-* How was the architecture adjusted and why was it adjusted? Typical adjustments could include choosing a different model architecture, adding or taking away layers (pooling, dropout, convolution, etc), using an activation function or changing the activation function. One common justification for adjusting an architecture would be due to over fitting or under fitting. A high accuracy on the training set but low accuracy on the validation set indicates over fitting; a low accuracy on both sets indicates under fitting.
-* Which parameters were tuned? How were they adjusted and why?
-* What are some of the important design choices and why were they chosen? For example, why might a convolution layer work well with this problem? How might a dropout layer help with creating a successful model?
 
 LeNet was the starting point. Basic LeNet does not achieve the required minimum accuracy obviously.
 Then I added the skip connections to implement the multistage classifier from the mentioned LeCunn paper.
@@ -133,15 +134,8 @@ When I started increasing the network size I saw that the training set accuracy 
 Since I couldn't get a really high accuracy (>99%) with the skip connection two layer convolutional network, I tried to just go deeper with the convolutions without pooling layers and no skip connections.
 
 A ran many experiments with both models on AWS GPUs to see what network size can be trained in a reasonable time frame.
-
-I used an initial learning rate of 0.001 with exponential decay.
-
-If a well known architecture was chosen:
-* What architecture was chosen?
-* Why did you believe it would be relevant to the traffic sign application?
-* How does the final model's accuracy on the training, validation and test set provide evidence that the model is working well?
  
-My final solution follows the general avice "deeper is better". Since not only the training, but the validation and test accuracies are high as well, the network didn't just learn all the training examples, but achived a more generalized knowledge.
+My final solution followed the general avice "deeper is better". Since not only the training, but the validation and test accuracies are high as well, I believe the network didn't just learn all the training examples, but achived a more generalized knowledge. Although the test set accuracy was only 97.5% compared with 99.3%, so could be still better.
 
 ### Test a Model on New Images
 
